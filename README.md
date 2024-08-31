@@ -1,8 +1,6 @@
-# React + Vite
+# Spotify Music Player
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Music player with multiple features available like Play, Pause, Next, Previous, background change, Tab Change, and others.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Custom Basic Application developed using ReactJS, Javascript, and Tailwind CSS, bundled using Vite and deployed on vercel using github plugin.
+- [Samespace Assignment Deployed Application Link](https://samespace-assignment-two.vercel.app/)
