@@ -1,25 +1,20 @@
 import React, { useState } from "react";
+import { motion } from 'framer-motion';
 import Tab from "./Tab.jsx";
 import searchicon from '../assets/searchicon.png';
 import { MdCancel } from "react-icons/md";
 
-const SongList = ({ songs, activeTab, onTabChange, onSongSelect }) => {
+const SongList = ({ songs, activeTab,currentSong, onTabChange, onSongSelect }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredSongs = songs.filter((song) =>
+  const filteredSongs = songs?.filter((song) =>
     (
         song.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         song.artist.toLowerCase().includes(searchTerm.toLowerCase())
     )
-);
+  );
 
-const getSongDuration = (song) => {
-    const duration = song.id * 300 * Math.random();
-    const minutes = Math.floor(duration / 60);
-    const seconds = Math.floor(duration % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-};
-
+  const noSongAvailable = (!filteredSongs || filteredSongs.length === 0);
 
   return (
     <div className="w-5/12 p-6">
@@ -50,11 +45,26 @@ const getSongDuration = (song) => {
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4">
-        {filteredSongs.map((song) => (
-          <div
+        {noSongAvailable ? <div className="w-full flex justify-center items-center h-full">
+        {/* Shimmer effect as a loading state */}
+        <div className="animate-pulse w-full">
+          <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
+          <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
+          <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
+          <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
+          <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
+          <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
+        </div>
+      </div>: 
+        filteredSongs.map((song,songIndex) => (
+          <motion.div
             key={song.id}
-            className="w-full flex justify-between items-center p-4 bg-transparent rounded-md cursor-pointer"
-            onClick={() => onSongSelect(song)}
+            initial={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ delay: songIndex * 0.1, duration: 0.3 }}
+            className={`w-full flex justify-between ${currentSong?.id === song.id ? 'bg-[#FFFFFF14]':'bg-transparent'} hover:bg-[#FFFFFF14] 
+            items-center p-4 rounded-lg cursor-pointer`}
+            onClick={() => onSongSelect(songIndex)}
           >
             <div className="flex items-center justify-center">
                 <img 
@@ -67,8 +77,8 @@ const getSongDuration = (song) => {
                     <p className="text-lg font-normal text-white text-opacity-60">{song.artist}</p>
                 </div>
             </div>
-            <span className="text-lg text-white text-opacity-50">{getSongDuration(song)}</span>
-          </div>
+            <span className="text-lg text-white text-opacity-50">{song.duration}</span>
+          </motion.div>
         ))}
       </div>
     </div>
