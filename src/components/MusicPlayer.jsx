@@ -5,7 +5,7 @@ import nexticon from '../assets/nexticon.png';
 import previousicon from '../assets/previousicon.png';
 import pauseicon from '../assets/pauseicon.png';
 
-const MusicPlayer = ({ songs, currentSongIndex, setCurrentSongIndex }) => {
+const MusicPlayer = ({ songs, currentSongIndex, showSongList, setCurrentSongIndex }) => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -76,18 +76,18 @@ const MusicPlayer = ({ songs, currentSongIndex, setCurrentSongIndex }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2 }}
-      className="w-7/12 px-20 py-20 flex flex-col">
+      className="lg:w-7/12 w-full p-8 xl:p-20 flex flex-col">
       {currentSong ? (
-        <div className="w-full flex flex-col gap-4">
-          <div className="w-full text-left flex gap-2 flex-col">
+        <div className={`w-full flex ${showSongList ? 'flex-row lg:flex-col':'flex-col'} gap-4`}>
+          {!showSongList ? <div className="w-full text-left flex gap-2 flex-col">
               <h3 className="text-white text-4xl font-bold ">{currentSong.name}</h3>
               <p className="text-white text-lg font-normal text-opacity-60">{currentSong.artist}</p>
-          </div>
+          </div> : null}
           <motion.div 
             initial={{ x: '-100%' }}
             animate={{ x:  '0%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="w-[500px] h-[500px] rounded-lg flex gap-6 flex-col">
+            className={` lg:w-full lg:h-[800px] xl:h-[500px] ${showSongList ? 'w-[40%] h-[100px]':'w-[100%] h-[400px] sm:h-[600px]'} rounded-lg flex gap-6 flex-col`}>
             <motion.img
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -104,7 +104,7 @@ const MusicPlayer = ({ songs, currentSongIndex, setCurrentSongIndex }) => {
               max="100"
               value={(currentTime / duration) * 100 || 0}
               onChange={handleSeek}
-              className="w-full h-2 bg-gray-700 appearance-none rounded-full cursor-pointer"
+              className="w-full h-2 bg-gray-700 rounded-full cursor-pointer"
               style={{
                 background: `linear-gradient(to right, white ${currentTime / duration * 100}%, #4A5568 0%)`,
               }}
@@ -116,14 +116,14 @@ const MusicPlayer = ({ songs, currentSongIndex, setCurrentSongIndex }) => {
           initial={{ x: '-100%' }}
           animate={{ x:  '0%' }}
           transition={{ type: 'tween', duration: 0.3 }}
-          className="w-full flex justify-center items-center mt-8">
-            <button onClick={playPrevious} className="mx-2">
+          className="w-full flex gap-6 justify-center items-center mt-8">
+            <button onClick={playPrevious}>
             <img src={previousicon} alt="previous-button"/>
             </button>
-            <button onClick={togglePlayPause} className="mx-2">
+            <button onClick={togglePlayPause}>
               {isPlaying ? <img src={playicon} alt="play-button"/> : <img src={pauseicon} alt="pause-button"/>}
             </button>
-            <button onClick={playNext} className="mx-2">
+            <button onClick={playNext}>
               <img src={nexticon} alt="next-button"/>
             </button>
           </motion.div>

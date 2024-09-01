@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Sidebar from './components/Sidebar.jsx';
 import SongList from './components/SongList.jsx';
 import MusicPlayer from './components/MusicPlayer.jsx';
@@ -9,6 +8,7 @@ const App = () => {
   const [activeTab, setActiveTab] = useState('foryou');
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [songContainer, setSongContainer] = useState([]);
+  const [showSongList, setShowSongList] = useState(false);
 
   useEffect(() => {
     const fetchSongsWithDuration = async () => {
@@ -59,6 +59,7 @@ const App = () => {
   )
 
   const handleSongSelect = (songID) => {
+    showSongList && setShowSongList(!setShowSongList);
     setSongContainer(filteredSongs)
     setCurrentSongIndex(songID);
   };
@@ -66,27 +67,35 @@ const App = () => {
   const currentSong = songContainer[currentSongIndex];
 
   return (
-    <div className="w-full flex flex-col sm:flex-row" 
+    <div className="w-full flex min-h-screen flex-col xl:flex-row h-auto" 
     style={{
       background: `linear-gradient(108.18deg, ${currentSong ? currentSong?.accent : '#201606'} 2.46%, #000000 99.84%)`,
       transition: 'background-color 0.8s ease-in-out'
       }}
     >
-      <Sidebar />
-      <div className="flex-grow flex">
+      <Sidebar setShowSongList={setShowSongList} showSongList={showSongList}/>
+      <div className={`w-full lg:flex-grow ${showSongList ? 'flex-col-reverse':'flex-col'} flex lg:flex-row`}>
         <SongList 
           songs={filteredSongs}
           activeTab={activeTab} 
           currentSong={currentSong}
+          showSongList={showSongList}
           onTabChange={handleTabChange} 
           onSongSelect={handleSongSelect}
         />
         <MusicPlayer 
           songs={songContainer}
           currentSongIndex={currentSongIndex} 
+          showSongList={showSongList}
           setCurrentSongIndex={setCurrentSongIndex}
         />
       </div>
+      <button
+          className="lg:hidden w-full flex-1 bg-[#FFFFFF14] text-white font-semibold sticky bottom-0 z-50 text-4xl p-6 rounded-lg"
+          onClick={() => setShowSongList(!showSongList)}
+        >
+          {showSongList ? 'Close Songs' : 'Show Songs'}
+      </button>
     </div>
   );
 }

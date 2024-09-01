@@ -8,6 +8,11 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 /*Chrome*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   input[type='range'] {

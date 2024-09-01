@@ -4,7 +4,7 @@ import Tab from "./Tab.jsx";
 import searchicon from '../assets/searchicon.png';
 import { MdCancel } from "react-icons/md";
 
-const SongList = ({ songs, activeTab,currentSong, onTabChange, onSongSelect }) => {
+const SongList = ({ songs, activeTab,currentSong, showSongList, onTabChange, onSongSelect }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredSongs = songs?.filter((song) =>
@@ -17,7 +17,7 @@ const SongList = ({ songs, activeTab,currentSong, onTabChange, onSongSelect }) =
   const noSongAvailable = (!filteredSongs || filteredSongs.length === 0);
 
   return (
-    <div className="w-5/12 p-6">
+    <div className={`w-full ${showSongList ? 'block' : 'hidden'} lg:block lg:w-5/12 p-6`}>
       <div className="flex gap-10">
         <Tab
           active={activeTab === "foryou"}
@@ -55,7 +55,7 @@ const SongList = ({ songs, activeTab,currentSong, onTabChange, onSongSelect }) =
           <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
           <div className="h-20 bg-gray-700 rounded-lg mb-4"></div>
         </div>
-      </div>: 
+      </div>:
         filteredSongs.map((song,songIndex) => (
           <motion.div
             key={song.id}
