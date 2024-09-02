@@ -4,12 +4,16 @@ import playicon from '../assets/playicon.png';
 import nexticon from '../assets/nexticon.png';
 import previousicon from '../assets/previousicon.png';
 import pauseicon from '../assets/pauseicon.png';
+import volumeicon from '../assets/volumeicon.png';
 
 const MusicPlayer = ({ songs, currentSongIndex, showSongList, setCurrentSongIndex }) => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.5); // Volume state (range from 0 to 1)
+
+  const [isVolumeClicked, setIsVolumeClicked] = useState(false);
   const audioRef = useRef(null);
 
   const currentSong = songs[currentSongIndex];
@@ -71,6 +75,16 @@ const MusicPlayer = ({ songs, currentSongIndex, showSongList, setCurrentSongInde
     };
   }, [currentSongIndex, isPlaying]);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume; // Update the audio element's volume
+    }
+  }, [volume]); // Adjust volume whenever the state changes
+
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value); // Update volume state when slider is moved
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -116,16 +130,36 @@ const MusicPlayer = ({ songs, currentSongIndex, showSongList, setCurrentSongInde
           initial={{ x: '-100%' }}
           animate={{ x:  '0%' }}
           transition={{ type: 'tween', duration: 0.3 }}
-          className="w-full flex gap-6 justify-center items-center mt-8">
-            <button onClick={playPrevious}>
-            <img src={previousicon} alt="previous-button"/>
-            </button>
-            <button onClick={togglePlayPause}>
-              {isPlaying ? <img src={playicon} alt="play-button"/> : <img src={pauseicon} alt="pause-button"/>}
-            </button>
-            <button onClick={playNext}>
-              <img src={nexticon} alt="next-button"/>
-            </button>
+          className={`w-full flex ${showSongList && isVolumeClicked ? 'flex-col sm:flex-row':''} ${isVolumeClicked ? 'gap-4 sm:gap-20 lg:gap-10':'gap-12 sm:gap-60 lg:gap-48'} justify-end items-center`}>
+            <div className={`"w-full h-full flex ${isVolumeClicked ? 'md:justify-end': 'md:justify-center'} gap-6`}>
+              <button onClick={playPrevious}>
+              <img src={previousicon} alt="previous-button"/>
+              </button>
+              <button onClick={togglePlayPause}>
+                {isPlaying ? <img src={playicon} alt="play-button"/> : <img src={pauseicon} alt="pause-button"/>}
+              </button>
+              <button onClick={playNext}>
+                <img src={nexticon} alt="next-button"/>
+              </button>
+            </div>
+            {/* Volume Control */}
+            <div className={`flex ${showSongList && isVolumeClicked ? 'flex-row-reverse sm:flex-row':''} gap-4 items-center`}>
+              {isVolumeClicked ? <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="w-36 h-1 bg-gray-600 rounded-lg appearance-none"
+                style={{
+                background: `linear-gradient(to right, white ${volume*100}%, #4A5568 0%)`,
+              }}
+              /> : null}
+              <button onClick={() => setIsVolumeClicked(!isVolumeClicked)} className="w-fit">
+                <img src={volumeicon} alt="volume-button"/>
+              </button>
+            </div>
           </motion.div>
 
           {/* Audio element */}
